@@ -1,0 +1,22 @@
+{
+  "name": "PokedexFrontTech",
+  "version": "1.0.0",
+  "description": "Encyclopedia Poke",
+  "main": "index.html",
+  "scripts": {
+    "start": "node_modules/http-server/bin/http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Deuanz/PokedexFrontTech.git"
+  },
+  "author": "Rattanawadi Niothong",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Deuanz/PokedexFrontTech/issues"
+  },
+  "homepage": "https://github.com/Deuanz/PokedexFrontTech#README.md",
+  "devDependencies": {
+    "http-server": "^0.9.0"
+  }
+}
