@@ -4,7 +4,7 @@
   "description": "Encyclopedia Poke",
   "main": "index.html",
   "scripts": {
-    "start": "node_modules/http-server/bin/http-server"
+    "start": "node_modules/.bin/http-server"
   },
   "repository": {
     "type": "git",
