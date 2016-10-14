@@ -4,7 +4,9 @@
   "description": "Encyclopedia Poke",
   "main": "index.html",
   "scripts": {
-    "start": "node_modules/.bin/http-server"
+    "build": "node_modules/.bin/webpack --display-error-details",
+    "start": "node_modules/.bin/webpack-dev-server --content-base dist",
+    "babel": "node_modules/.bin/babel src -d dist"
   },
   "repository": {
     "type": "git",
@@ -17,6 +19,11 @@
   },
   "homepage": "https://github.com/Deuanz/PokedexFrontTech#README.md",
   "devDependencies": {
-    "http-server": "^0.9.0"
+    "babel-cli": "^6.16.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "http-server": "^0.9.0",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.2"
   }
 }
