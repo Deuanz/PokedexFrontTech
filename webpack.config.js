@@ -12,7 +12,7 @@ var config = {
                 include: path.join(__dirname, 'src'),
                 loader: 'babel-loader',
                 query: {
-                    presets: ['es2015']
+                    presets: ['es2015', 'react']
                 }
             }
         ]
@@ -23,7 +23,8 @@ var config = {
     },
     devServer: {
         historyApiFallback: true,
-        inline: true
+        inline: true,
+        port: 8081
     }
 };
 
