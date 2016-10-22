@@ -1,5 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import {SearchForm} from './search-form'
+import axios from 'axios'
 
 
 const Header = (props) => (
@@ -29,7 +31,8 @@ const Image = (props) => {
     return <img src={path} height="200" width="200" />
 }
 
-const Pokemons = (props) => {
+export const PokemonList = (props) => {
+    console.log(props.items)
     return (
         <ol>
             {props.items.map(item => (
@@ -42,48 +45,34 @@ const Pokemons = (props) => {
         </ol>
     )
 }
-const App = () => {
-    const items = [
-        {
-            'Name': 'Pikachu',
-            'Height': "1' 04",
-            'Weight': "13.2 lbs",
-            'Gender': 'M F',
-            'Category': 'Mouse',
-            'Ablities': 'Static',
-            'Yype': 'Electronic',
-            'Weaknesses': 'Ground',
-            'Evalutions': 'Pichu -> Picachu -> Raichu'
-        },
-        {
-            'Name': 'Meowth',
-            'Height': "1' 04",
-            'Weight': "9.3 lbs",
-            'Gender': 'M F',
-            'Category': 'Scratch Cat',
-            'Ablities': 'Pickup Technician',
-            'Type': 'Normal',
-            'Weaknesses': 'Fighting',
-            'Evalutions': 'Meowth -> Persian'
-        },
-        {
-            'Name': 'Victini',
-            'Height': "1' 04",
-            'Weight': "8.8 lbs",
-            'Gender': 'Unknown',
-            'Category': 'Victory',
-            'Ablities': 'Victory Star',
-            'Type': 'Psychic, Fire',
-            'Weaknesses': 'Water, Ground, Eock, Ghost, Dark',
-            'Evalutions': 'Does not evolve'
+class App extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            pokemons : []
         }
-    ]
-    return (
-        <section>
-            <Header title="MY POKEMONS" />
-            <Pokemons items={items}/>
-        </section>
-    )
+    }
+
+    onSearch(query) {
+        event.preventDefault()
+        axios.get(`http://pokeapi.co/api/v2/pokemon/${query}/`)
+            .then(response => {
+                console.log('RESPONSE:', response)
+                const pokemons = response.data.Search
+                this.setState({
+                    pokemons: pokemons
+                })
+            })
+    }
+    render() {
+        return (
+            <section>
+                <Header title="MY POKEMONS" />
+                <SearchForm onSearchSubmit={this.onSearch.bind(this)} />
+                <PokemonList items={this.state.pokemons}/>
+            </section>
+        )
+    }
 }
 
 const element = document.getElementById('app')
