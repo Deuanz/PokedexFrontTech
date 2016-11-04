@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {SearchForm} from './search-form'
 import axios from 'axios'
+import { Router, Route, hashHistory, Link, IndexRoute } from 'react-router'
 
 
 const Header = (props) => (
@@ -14,51 +15,73 @@ const Title = (props) => (
     <h2>{props.title}</h2>
 )
 
-const Detail = (props) => {
-    const keys = Object.keys(props.detail).filter(key => key != 'Name')
-    return (
-        <ul>
-            {keys.map(key => (
-                <li>{key}: {props.detail[key]}</li>
-            ))}
-        </ul>
-    )
+class Detail extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            pokemon: {
+                name: 'Unknown'
+            }
+        }
+        if (props.location.query.id) {
+            const id = props.location.query.id
+            axios.get(`https://api.pokemontcg.io/v1/cards/${id}`)
+                .then(response => {
+                    const pokemon = response.data
+                    this.setState({
+                        pokemon: pokemon
+                    })            
+                })
+        }
+    }
+
+    render() {
+        const pokemon = this.state.pokemon
+        return (
+            <section>
+                <h1>{pokemon.name}</h1>
+                <div>
+                    <img src={pokemon.imageUrl}/>
+                </div>
+            </section>      
+        )
+    }
 }
 
-const Image = (props) => {
-    const name = props.name.toLowerCase()
-    const path = ['img/', name , '.png'].join("")
-    return <img src={path} height="200" width="200" />
-}
+const PokemonList = (props) => (
+    <ul>
+    {props.items.map((pokemon, i) => {
+        const query = {
+            pathname: '/detail',
+            query: {
+                id: pokemon.id
+            }
+        }
+        return (
+            <li key={i}>
+                <h4><Link to={query}>{pokemon.name}</Link></h4>
+            </li>
+        )
+    })}
+    </ul>
+)
 
-export const PokemonList = (props) => {
-    console.log(props.items)
-    return (
-        <ol>
-            {props.items.map(item => (
-                <li>
-                    <Title title={item.Name} />
-                    <Image name={item.Name} />
-                    <Detail detail={item} />
-                </li>
-            ))}
-        </ol>
-    )
-}
-class App extends React.Component {
+class Search extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             pokemons : []
         }
+        if(props.location.query.name) {
+            this.onSearch(props.location.query.name)
+        }
     }
 
     onSearch(query) {
-        event.preventDefault()
-        axios.get(`http://pokeapi.co/api/v2/pokemon/${query}/`)
+        axios.get(`https://api.pokemontcg.io/v1/cards?name=${query}`)
             .then(response => {
                 console.log('RESPONSE:', response)
-                const pokemons = response.data.Search
+                const pokemons = response.data.cards
                 this.setState({
                     pokemons: pokemons
                 })
@@ -75,5 +98,42 @@ class App extends React.Component {
     }
 }
 
+const Home = () => (
+    <section>
+        <h1>This is HOME :D</h1>
+    </section>
+)
+
+const Nav = () => (
+    <nav>
+        <ul>
+            <li><Link to="/" >HOME</Link></li>
+            <li><Link to="/search" >SEARCH</Link></li>
+            <li><Link to="/detail" >DETAIL</Link></li>
+        </ul>
+    </nav>
+)
+
+const App = props =>  (
+    <section>
+        <Nav />
+        {props.children}
+    </section>
+)
+
+class Main extends React.Component {
+    render() {
+        return (
+            <Router history={hashHistory}>
+                <Route path="/" component={App} >
+                    <IndexRoute component={Home} />
+                    <Route path="detail" component={Detail} />
+                    <Route path="search" component={Search} />
+                </Route>
+            </Router>
+        )
+    }
+}
+
 const element = document.getElementById('app')
-ReactDOM.render(<App />, element)
+ReactDOM.render(<Main />, element)
