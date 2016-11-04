@@ -27,7 +27,7 @@ class Detail extends React.Component {
             const id = props.location.query.id
             axios.get(`https://api.pokemontcg.io/v1/cards/${id}`)
                 .then(response => {
-                    const pokemon = response.data
+                    const pokemon = response.data.card
                     this.setState({
                         pokemon: pokemon
                     })            
@@ -60,6 +60,7 @@ const PokemonList = (props) => (
         return (
             <li key={i}>
                 <h4><Link to={query}>{pokemon.name}</Link></h4>
+                <img src={pokemon.imageUrl} />
             </li>
         )
     })}
